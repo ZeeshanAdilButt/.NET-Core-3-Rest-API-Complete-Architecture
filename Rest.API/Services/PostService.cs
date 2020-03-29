@@ -17,12 +17,12 @@ namespace Rest.API.Services
             this._dataContext = dataContext;
         }
 
-        public async Task<List<Post>> GetPosts()
+        public async Task<List<Post>> GetPostsAsync()
         {
             return await _dataContext.Posts.ToListAsync();
         }
 
-        public async Task<Post> GetPostById(Guid postId)
+        public async Task<Post> GetPostByIdAsync(Guid postId)
         {
             return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == postId);
         }
@@ -38,7 +38,7 @@ namespace Rest.API.Services
             return created > 0;
         }
 
-        public async Task<bool> UpdatePost(Post postToUpdate)
+        public async Task<bool> UpdatePostAsync(Post postToUpdate)
         {
 
             _dataContext.Posts.Update(postToUpdate);
@@ -48,7 +48,7 @@ namespace Rest.API.Services
             return updated > 0;
         }
 
-        public async Task<bool> DeletePost(Guid postId)
+        public async Task<bool> DeletePostAsync(Guid postId)
         {
             var post = await GetPostById(postId);
 

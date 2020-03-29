@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rest.API.Data;
-using Rest.API.Services;
+using Rest.API.Services; 
 
 namespace Rest.API.Installer
 {
@@ -21,7 +21,8 @@ namespace Rest.API.Installer
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<DataContext>();
 
-            services.AddScoped<IPostService, PostService>();
+            //services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IPostService, CosmosPostService>();
 
         }
     }
