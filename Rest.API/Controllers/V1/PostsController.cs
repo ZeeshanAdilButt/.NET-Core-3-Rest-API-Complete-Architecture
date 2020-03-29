@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rest.API.Contracts.V1;
+using Rest.API.Contracts.V1.Requests;
+using Rest.API.Contracts.V1.Responses;
 using Rest.API.Domain;
 using System;
 using System.Collections.Generic;
@@ -28,9 +30,24 @@ namespace Rest.API.Controllers.V1
         {
 
             return Ok(_posts);
-
         }
 
+        [HttpPost(ApiRoutes.Posts.Create)]
+        public IActionResult Create([FromBody]CreatePostRequest postRequest)
+        {
+            var post = new Post { Id = postRequest.Id};
 
+            if (String.IsNullOrEmpty(post.Id))
+                post.Id = Guid.NewGuid().ToString();
+
+            _posts.Add(post);
+
+            var baseUri = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            var locationUri = baseUri + "/" + ApiRoutes.Posts.Get.Replace("{postId}", post.Id);
+
+            var response = new PostResponse { Id = post.Id };
+
+            return Created(locationUri, post);
+        }
     }
 }
