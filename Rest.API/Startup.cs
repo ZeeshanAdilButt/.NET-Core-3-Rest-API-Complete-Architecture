@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Rest.API.Options;
 using Microsoft.OpenApi.Models;
 using Rest.API.Installer;
+using Rest.API.Services;
 
 namespace Rest.API
 {
@@ -31,7 +32,6 @@ namespace Rest.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.InstallerServicesAssembly(Configuration);
 
         }

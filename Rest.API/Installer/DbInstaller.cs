@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rest.API.Data;
+using Rest.API.Services;
 
 namespace Rest.API.Installer
 {
@@ -19,6 +20,9 @@ namespace Rest.API.Installer
                   configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<DataContext>();
+
+            services.AddSingleton<IPostService, PostService>();
+
         }
     }
 }
