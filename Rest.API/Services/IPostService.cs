@@ -10,5 +10,6 @@ namespace Rest.API.Services
     {
         List<Post> GetPosts();
         Post GetPostById(Guid postId);
+        bool UpdatePost(Post postToupdate);
     }
 }

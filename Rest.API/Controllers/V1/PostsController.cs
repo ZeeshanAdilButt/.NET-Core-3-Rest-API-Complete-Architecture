@@ -55,5 +55,21 @@ namespace Rest.API.Controllers.V1
 
             return Created(locationUri, post);
         }
+
+        [HttpPut(ApiRoutes.Posts.Update)]
+        public IActionResult Update([FromRoute]Guid postId, [FromBody]UpdatePostRequest postRequest)
+        {
+            var post = new Post {
+                Id = postId,
+                Name = postRequest.Name
+            };
+
+            var updated = _postService.UpdatePost(post);
+
+            if (updated)
+                return Ok(post);
+
+            return NotFound();
+        }
     }
 }
