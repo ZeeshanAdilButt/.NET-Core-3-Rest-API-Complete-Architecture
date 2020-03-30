@@ -12,5 +12,6 @@ namespace Rest.API.Services
         Task<Post> GetPostByIdAsync(Guid postId);
         Task<List<Post>> GetPostsAsync();
         Task<bool> UpdatePostAsync(Post postToUpdate);
+        Task<bool> UserOwnsPostAsync(Guid postId, string v);
     }
 }

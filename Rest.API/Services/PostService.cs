@@ -50,7 +50,7 @@ namespace Rest.API.Services
 
         public async Task<bool> DeletePostAsync(Guid postId)
         {
-            var post = await GetPostById(postId);
+            var post = await GetPostByIdAsync(postId);
 
             _dataContext.Posts.Remove(post);
             var deleted = await _dataContext.SaveChangesAsync();
@@ -58,6 +58,21 @@ namespace Rest.API.Services
             return deleted > 0;
         }
 
-      
+        public async Task<bool> UserOwnsPostAsync(Guid postId, string userId)
+        {
+            var post = await _dataContext.Posts.AsNoTracking().SingleOrDefaultAsync(x => x.Id == postId);
+
+            if (post == null)
+            {
+                return false;
+            }
+
+            if (post.UserId != userId)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

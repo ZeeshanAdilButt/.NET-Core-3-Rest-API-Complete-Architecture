@@ -15,5 +15,7 @@ namespace Rest.API.Data
         }
 
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

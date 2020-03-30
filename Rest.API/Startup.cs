@@ -65,6 +65,7 @@ namespace Rest.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

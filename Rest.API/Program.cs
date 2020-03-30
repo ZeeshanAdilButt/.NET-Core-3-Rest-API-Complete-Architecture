@@ -15,6 +15,17 @@ namespace Rest.API
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
+
+
+            // running migrations automatically
+            //using (var serviceScope = host.Services.CreateScope())
+            //{
+            //    var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+
+            //    await dbContext.Database.MigrateAsync();
+
+            //}
+
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

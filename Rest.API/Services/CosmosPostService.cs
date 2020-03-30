@@ -70,6 +70,9 @@ namespace Rest.API.Services
             return response.IsSuccess;
         }
 
-        
+        public Task<bool> UserOwnsPostAsync(Guid postId, string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -18,11 +18,15 @@ namespace Rest.API.Installer
             services.AddDbContext<DataContext>(options =>
               options.UseSqlServer(
                   configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<DataContext>();
 
-            //services.AddScoped<IPostService, PostService>();
-            services.AddScoped<IPostService, CosmosPostService>();
+            services.AddDefaultIdentity<IdentityUser>()
+               .AddRoles<IdentityRole>()
+               .AddEntityFrameworkStores<DataContext>();
+
+            services.AddScoped<IPostService, PostService>();
+
+            //-- service pointing to Cosmos DB
+            //services.AddScoped<IPostService, CosmosPostService>();
 
         }
     }

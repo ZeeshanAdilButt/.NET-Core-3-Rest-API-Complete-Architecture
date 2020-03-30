@@ -1,16 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rest.API.Contracts.V1;
 using Rest.API.Contracts.V1.Requests;
 using Rest.API.Contracts.V1.Responses;
 using Rest.API.Domain;
+using Rest.API.Extensions;
 using Rest.API.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Rest.API.Controllers.V1
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PostsController : Controller
     {
         private readonly IPostService _postService;
@@ -23,14 +28,14 @@ namespace Rest.API.Controllers.V1
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public async Task<IActionResult> GetAllAsync()
         {
-            return Ok(_postService.GetPosts());
+            return Ok(_postService.GetPostsAsync());
         }
 
         [HttpGet(ApiRoutes.Posts.Get)]
         public async Task<IActionResult> GetAsync([FromRoute] Guid postId)
         {
 
-            var post = _postService.GetPostById(postId);
+            var post = _postService.GetPostByIdAsync(postId);
 
             if (post == null)
                 return NotFound();
@@ -45,7 +50,8 @@ namespace Rest.API.Controllers.V1
             var post = new Post
             {
                 Id = Guid.NewGuid(),
-                Name = postRequest.Name
+                Name = postRequest.Name,
+                UserId = HttpContext.GetUserId()
             };
 
             if (post.Id != Guid.Empty)
@@ -62,15 +68,20 @@ namespace Rest.API.Controllers.V1
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
-        public async Task<IActionResult> UpdateAsync([FromRoute]Guid postId, [FromBody]UpdatePostRequest postRequest)
+        public async Task<IActionResult> UpdateAsync([FromRoute]Guid postId, [FromBody]UpdatePostRequest request)
         {
-            var post = new Post
-            {
-                Id = postId,
-                Name = postRequest.Name
-            };
 
-            var updated = await _postService.UpdatePost(post);
+            var userOwnsPost = await _postService.UserOwnsPostAsync(postId, HttpContext.GetUserId());
+
+            if (!userOwnsPost)
+            {
+                return BadRequest(new ErrorResponse(new ErrorModel { Message = "You do not own this post" }));
+            }
+
+            var post = await _postService.GetPostByIdAsync(postId);
+            post.Name = request.Name;
+
+            var updated = await _postService.UpdatePostAsync(post);
 
             if (updated)
                 return Ok(post);
@@ -81,7 +92,14 @@ namespace Rest.API.Controllers.V1
         [HttpDelete(ApiRoutes.Posts.Delete)]
         public async Task<IActionResult> DeleteAsync([FromBody]Guid postId)
         {
-            var deleted = await _postService.DeletePost(postId);
+            var userOwnsPost = await _postService.UserOwnsPostAsync(postId, HttpContext.GetUserId());
+
+            if (!userOwnsPost)
+            {
+                return BadRequest(new ErrorResponse(new ErrorModel { Message = "You do not own this post" }));
+            }
+
+            var deleted = await _postService.DeletePostAsync(postId);
 
             if (deleted)
                 return NoContent();
