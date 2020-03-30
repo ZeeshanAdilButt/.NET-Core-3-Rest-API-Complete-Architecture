@@ -76,14 +76,14 @@ namespace Rest.API.Controllers.V1
             {
                 return BadRequest(new AuthFailedResponse
                 {
-                    //Errors = authResponse.Errors
+                    Errors = authResponse.Errors
                 });
             }
 
             return Ok(new AuthSuccessResponse
             {
                 Token = authResponse.Token,
-                //RefreshToken = authResponse.RefreshToken
+                RefreshToken = authResponse.RefreshToken
             });
         }
     }
