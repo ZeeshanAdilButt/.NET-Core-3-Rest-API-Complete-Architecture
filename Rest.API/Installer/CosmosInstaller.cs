@@ -15,14 +15,14 @@ namespace Rest.API.Installer
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            var cosmosStoreSettings = new CosmosStoreSettings(
-                configuration["CosmosSettings:DatabaseName"],
-                configuration["CosmosSettings:AccountUri"],
-                configuration["CosmosSettings:AccountKey"],
-                new ConnectionPolicy { ConnectionMode = ConnectionMode.Direct, ConnectionProtocol = Protocol.Tcp }
-                );
+            //var cosmosStoreSettings = new CosmosStoreSettings(
+            //    configuration["CosmosSettings:DatabaseName"],
+            //    configuration["CosmosSettings:AccountUri"],
+            //    configuration["CosmosSettings:AccountKey"],
+            //    new ConnectionPolicy { ConnectionMode = ConnectionMode.Direct, ConnectionProtocol = Protocol.Tcp }
+            //    );
 
-            services.AddCosmosStore<Post>(cosmosStoreSettings);
+            //services.AddCosmosStore<Post>(cosmosStoreSettings);
 
         }
     }

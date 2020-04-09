@@ -5,8 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Rest.API.Data;
 
 namespace Rest.API
 {
@@ -14,7 +17,17 @@ namespace Rest.API
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = CreateWebHostBuilder(args).Build();
+
+            using (var serviceScope = host.Services.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<DataContext>();
+
+                dbContext.Database.MigrateAsync().GetAwaiter().GetResult();
+               
+            }
+
+            host.RunAsync().GetAwaiter().GetResult(); ;
 
 
             // running migrations automatically
